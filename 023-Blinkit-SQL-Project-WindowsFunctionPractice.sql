@@ -6,6 +6,7 @@ data to practice ranking, moving averages, cumulative calculations, segmentation
 USE blinkitdatabase;
 
 -- 1. Rank customers based on their total spending.
+
 SELECT 
 	customer_id,
     SUM(order_total) AS totalSpending,
@@ -14,6 +15,7 @@ FROM blinkit_orders
 GROUP BY customer_id;
 
 -- 2. Rank stores by total sales.
+
 SELECT
 	store_id,
 	SUM(order_total) AS totalSales,
@@ -22,6 +24,7 @@ FROM blinkit_orders
 GROUP BY store_id;
 
 -- 3. Rank products by total revenue within each product category.
+
 SELECT 
     bip.category,
     bip.product_name,
@@ -36,6 +39,7 @@ GROUP BY bip.category, bip.product_name;
 
 
 -- 4. Calculate the cumulative sales for each customer over time.
+
 WITH customerMonthlySpending AS (
 	SELECT 
 		YEAR(order_date) AS year_,
@@ -59,6 +63,7 @@ FROM customerMonthlySpending
 ORDER BY customer_id, year_, month_;
 
 -- 5. Calculate cumulative running store revenue
+
 SELECT 
     YEAR(order_date) AS year_,
     MONTH(order_date) AS month_,
@@ -73,6 +78,7 @@ GROUP BY store_id, YEAR(order_date), MONTH(order_date)
 ORDER BY year_, month_, store_id;
 
 -- 6. Compare every customer's current order amount with their previous order.
+
 SELECT
     customer_id,
     order_id,
@@ -87,6 +93,7 @@ ORDER BY customer_id, order_date;
 
 
 -- 7.  Show the next purchase date for every customer.
+
 SELECT
     customer_id,
     order_id,
@@ -102,8 +109,8 @@ SELECT
 FROM blinkit_orders
 ORDER BY customer_id, order_date;
 
-
 -- 8. Calculate a 7-day moving average of daily sales for each store
+
 SELECT
 	store_id,
     order_date,
@@ -123,6 +130,7 @@ FROM (
 ORDER BY store_id, order_date;
 
 -- 9. Divide store into four sales quartiles.
+
 WITH storeTotalSales AS (
 	SELECT
 		store_id,
@@ -146,6 +154,7 @@ ORDER BY totalSales DESC;
 
 
 -- 10. Revenue Contribution to Store
+
 WITH storeTotalSales AS (
     SELECT
         store_id,
@@ -165,6 +174,7 @@ FROM storeTotalSales
 ORDER BY revenueContributionPercent DESC;
 
 -- 11. Show every customer's first purchase amount.
+
 WITH rankedOrders AS (
     SELECT
         customer_id,
@@ -186,6 +196,7 @@ WHERE rn = 1
 ORDER BY customer_id;
 
 -- 12. Show the latest order amount for every customer.
+
 WITH rankedOrders AS (
     SELECT
         customer_id,
@@ -207,6 +218,7 @@ WHERE rn = 1
 ORDER BY customer_id;
 
 -- 13. Identify the top 10% of customers based on spending.
+
 WITH customerSpending AS (
     SELECT
         customer_id,
@@ -229,6 +241,7 @@ WHERE spendingPercentile <= 0.10
 ORDER BY totalSpending DESC;
 
 -- 14. Determine each marketing campaign's contribution to total marketing revenue.
+
 WITH campaignRevenue AS (
     SELECT
         campaign_id,
